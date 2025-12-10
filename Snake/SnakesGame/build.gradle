@@ -1,0 +1,64 @@
+plugins {
+    id 'java'
+    id 'application'  // Добавляем плагин application для задачи run
+    id 'com.google.protobuf' version '0.9.4'
+    id 'idea'
+}
+
+group = 'ru.nsu.fit'
+version = '1.0-SNAPSHOT'
+
+// Указываем главный класс для задачи run
+application {
+    mainClass = 'ru.nsu.fit.snakes.Main'  // Замените на ваш главный класс
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'com.google.protobuf:protobuf-java:3.25.1'
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+protobuf {
+    protoc {
+        artifact = 'com.google.protobuf:protoc:3.25.1'
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {}
+            }
+        }
+    }
+    generatedFilesBaseDir = "$projectDir/src/generated"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+idea {
+    module {
+        sourceDirs += file("$projectDir/src/generated/main/java")
+        generatedSourceDirs += file("$projectDir/src/generated/main/java")
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Альтернативный вариант - кастомная задача run, если не хотите использовать плагин application
+/*
+task run(type: JavaExec) {
+    group = 'application'
+    description = 'Run the main application'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'ru.nsu.fit.Main'  // Замените на ваш главный класс
+    standardInput = System.in
+}
+*/
