@@ -1,4 +1,4 @@
-package ru.nsu.fit.snakes.model;
+package model;
 
 import me.ippolitov.fit.snakes.SnakesProto;
 
